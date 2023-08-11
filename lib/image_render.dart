@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/html_parser.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_svg/parser.dart';
 import 'package:html/dom.dart' as dom;
 
 typedef ImageSourceMatcher = bool Function(
@@ -80,9 +79,7 @@ ImageRender assetImageRender({
     (context, attributes, element) {
       final assetPath = _src(attributes)!.replaceFirst('asset:', '');
       if (_src(attributes)!.endsWith(".svg")) {
-        return SvgPicture.asset(assetPath,
-            width: width ?? _width(attributes),
-            height: height ?? _height(attributes));
+        return SizedBox.shrink();
       } else {
         return Image.asset(
           assetPath,
@@ -125,7 +122,8 @@ ImageRender networkImageRender({
         });
 
         ImageStreamListener? listener;
-        listener = ImageStreamListener((ImageInfo imageInfo, bool synchronousCall) {
+        listener =
+            ImageStreamListener((ImageInfo imageInfo, bool synchronousCall) {
           var myImage = imageInfo.image;
           Size size = Size(myImage.width.toDouble(), myImage.height.toDouble());
           if (!completer.isCompleted) {
